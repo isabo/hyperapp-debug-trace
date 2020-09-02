@@ -1,0 +1,21 @@
+{
+  "name": "hyperapp-debug-trace",
+  "version": "0.1.0",
+  "description": "Hyperapp middleware that traces execution of actions and effects.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hyperapp",
+    "middleware",
+    "trace",
+    "debug"
+  ],
+  "author": "Itzy Sabo",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^2.1.1"
+  }
+}
