@@ -2,9 +2,9 @@
 
 Traces all dispatched Hyperapp actions and effects.
 
-- Logs entry state and properties argument whenever an action is dispatched.
-- Parses and logs the return value of all actions.
-- Logs entry properties argument whenever an effect is dispatched.
+- Logs the state and properties arguments with which every action is dispatched.
+- Parses and logs the return value of every action.
+- Logs the properties argument with which every effect is dispatched.
 
 For example:
 
