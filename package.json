@@ -4,7 +4,8 @@
   "description": "Hyperapp middleware that traces execution of actions and effects.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup --config"
   },
   "keywords": [
     "hyperapp",
@@ -16,6 +17,8 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.1",
+    "rollup": "^2.26.9",
+    "rollup-plugin-terser": "^7.0.1"
   }
 }
