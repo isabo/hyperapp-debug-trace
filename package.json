@@ -1,8 +1,9 @@
 {
   "name": "hyperapp-debug-trace",
   "version": "0.1.0",
-  "description": "Hyperapp middleware that traces execution of actions and effects.",
-  "main": "index.js",
+  "description": "Debug Hyperapp apps by tracing execution of actions and effects.",
+  "main": "./dist/hyperapp-debug-trace.min.js",
+  "module": "./dist/hyperapp-debug-trace.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup --config"
