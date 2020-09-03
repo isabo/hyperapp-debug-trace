@@ -67,7 +67,7 @@ function wrapAction(actionFn) {
   // dispatch function is recursive.
   if (!actionFn['$isWrapped']) {
     function wrappedAction(state, props) {
-      console.group('Action: ' + actionFn.name);
+      console.group('Action: ' + getFunctionName(actionFn));
 
       // Log the arguments.
       console.group('Called with:');
@@ -93,7 +93,7 @@ function wrapAction(actionFn) {
 
       if (returnedProps.effects) {
         for (const [effectFn, props] of returnedProps.effects) {
-          console.log('Effect: ' + effectFn.name, props);
+          console.log('Effect: ' + getFunctionName(effectFn), props);
         }
       }
       console.groupEnd();
@@ -123,7 +123,7 @@ function wrapEffect(effectFn) {
   // dispatch function is recursive.
   if (!effectFn['$isWrapped']) {
     function wrappedEffect(dispatch, props) {
-      console.group('Effect: ' + effectFn.name);
+      console.group('Effect: ' + getFunctionName(effectFn));
       console.log('Props:', props);
 
       const rv = effectFn(dispatch, props);
@@ -172,4 +172,15 @@ function parseActionReturnValue(rv) {
   }
 
   return parsed;
+}
+
+/**
+ * Returns the name of a function without the 'bound ' prefix, which is added
+ * when .bind() is called on a function.
+ *
+ * @param {function} fn
+ * @return {string}
+ */
+function getFunctionName(fn) {
+  return fn.name.split(' ').slice(-1);
 }
