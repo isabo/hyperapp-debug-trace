@@ -6,7 +6,7 @@
  * @param {function} dispatch
  * @returns {function} a modified dispatch function
  */
-export function wrapDispatch(dispatch) {
+export function traceDispatch(dispatch) {
   return function traceDispatch(action, props) {
     // Hyperapp's dispatch function is called in a number of ways
     // ("signatures").
