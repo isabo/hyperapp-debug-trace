@@ -1,6 +1,12 @@
 # Hyperapp Debug Trace
 
-Use this as middleware to trace all dispatched actions and effects:
+Traces all dispatched Hyperapp actions and effects.
+
+- Logs entry state and properties argument whenever an action is dispatched.
+- Parses and logs the return value of all actions.
+- Logs entry properties argument whenever an effect is dispatched.
+
+For example:
 
 ![Example of trace output](./doc/snapshot.png)
 
