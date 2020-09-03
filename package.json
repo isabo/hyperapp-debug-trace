@@ -21,5 +21,13 @@
     "prettier": "^2.1.1",
     "rollup": "^2.26.9",
     "rollup-plugin-terser": "^7.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isabo/hyperapp-debug-trace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/isabo/hyperapp-debug-trace/issues"
+  },
+  "homepage": "https://github.com/isabo/hyperapp-debug-trace#readme"
 }
