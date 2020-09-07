@@ -184,6 +184,6 @@ function dispatchActionEffect(dispatch, action) {
  * @param {function} fn
  * @return {string}
  */
-function getFunctionName(fn) {
-  return fn.name.split(' ').slice(-1);
+export function getFunctionName(fn) {
+  return fn.name?.split(' ').slice(-1);
 }

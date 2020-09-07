@@ -1,4 +1,4 @@
-import { generateMiddleware } from './intercept';
+import { generateMiddleware, getFunctionName } from './intercept';
 
 export const traceDispatch = generateMiddleware({
   preAction,
@@ -44,11 +44,12 @@ function postAction(name, state, props, rv) {
 
   if (returnedProps.action) {
     console.log('Action:', returnedProps.action);
+    // TODO: parse name of action function / first element of action tuple.
   }
 
   if (returnedProps.effects) {
     for (const [effectFn, props] of returnedProps.effects) {
-      console.log('Effect: ' + name, props);
+      console.log('Effect: ' + getFunctionName(effectFn), props);
     }
   }
   console.groupEnd();
