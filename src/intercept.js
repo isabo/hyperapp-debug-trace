@@ -71,7 +71,6 @@ export function generateMiddleware({
       // This function wraps Hyperapp's own implementation of dispatch, and lets
       // us examine the signature that is being used.
 
-      let newState;
       if (typeof action === 'function') {
         // Signature 3. An action will be dispatched.
         action = wrapAction(action, preAction, postAction);
@@ -83,27 +82,31 @@ export function generateMiddleware({
         } else {
           // Signature 2: A new state has been provided. It is the first element
           // of the array.
-          newState = action[0];
-
           // The remaining elements are Effect tuples.
           for (let i = 1; i < action.length; i++) {
             const tuple = action[i];
             tuple[0] = wrapEffect(tuple[0], preEffect, postEffect);
           }
+
+          // Insert an effect that will call the onStateChange action
+          // immediately after the state is updated.
+          if (onStateChange) {
+            action.splice(1, 0, [dispatchActionEffect, onStateChange]);
+          }
         }
       } else {
         // Signature 1: A new state has been provided.
-        newState = action;
+        // The new state is the action argument. The props argument is not used.
+
+        // Schedule the onStateChange action to be dispatched as soon as the
+        // state is updated.
+        if (onStateChange) {
+          props = [dispatchActionEffect, onStateChange];
+        }
       }
 
       // Now call the original dispatch.
       dispatch(action, props);
-
-      // If the above dispatch changed the state, call the action that processes
-      // state changes.
-      if (newState !== undefined && onStateChange) {
-        dispatch(onStateChange);
-      }
     };
   };
 }
@@ -162,6 +165,16 @@ function wrapEffect(effectFn, pre, post) {
   } else {
     return effectFn;
   }
+}
+
+/**
+ * A Hyperapp effect that just dispatches an action.
+ *
+ * @param {*} dispatch
+ * @param {function|[function, *]} action The action (or action tuple) to dispatch.
+ */
+function dispatchActionEffect(dispatch, action) {
+  dispatch(action);
 }
 
 /**
