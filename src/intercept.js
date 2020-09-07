@@ -153,8 +153,6 @@ function wrapEffect(effectFn, pre, post) {
       if (pre) pre(fname, props);
       effectFn(dispatch, props);
       if (post) post(fname, props);
-
-      return rv;
     }
 
     // Indicate that this is now a wrapped function, so that we can avoid
