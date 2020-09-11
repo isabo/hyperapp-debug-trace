@@ -1,11 +1,37 @@
 import { generateMiddleware, getFunctionName } from './intercept';
 
 export const traceDispatch = generateMiddleware({
+  onStateChange: generateStateChangeAction(),
   preAction,
   postAction,
   preEffect,
   postEffect,
 });
+
+/**
+ * Returns an OnStateChange action that logs state changes.
+ *
+ * @returns {function(*)}
+ */
+function generateStateChangeAction() {
+  let prevState;
+
+  /**
+   * Log state changes.
+   *
+   * @param {*} state
+   */
+  return function OnStateChange(state) {
+    console.log('State changed from ', prevState, ' to', state);
+    prevState = state;
+
+    // Prevent this action from getting wrapped, as it the log will be
+    // confusing.
+    OnStateChange['$isWrapped'] = true;
+
+    return state;
+  };
+}
 
 /**
  * Logs the arguments provided to the action that is about to be dispatched.
