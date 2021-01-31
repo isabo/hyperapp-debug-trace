@@ -1,28 +1,35 @@
 /**
  * Generates a Hyperapp middleware function that will call hook functions before
- * and after involing any action or effect, and after the state changes.
+ * and after invoking any action or effect, and after the state changes.
  *
  * @param {Object} props
- * @param {Hyperapp.Action} [props.onStateChange] A Hyperapp action function or
- *    tuple that will be called whenever the state changes.
+ *
+ * @param {function} [props.buildStateChangeEffect] A function that builds a
+ *    Hyperapp effect tuple that will be invoked whenever the state changes.
+ *    The effect builder may accept the following arguments:
+ *    state - the new state of the application
+ *
  * @param {function} [props.preAction] A function that will called before any
  *    Hyperapp action is invoked. The function should take the following
  *    arguments:
  *    name  - the name of the action function
  *    state - the state that will be provided to the action function
  *    props - the second argument that the action function will be called with
- * * @param {function} [props.postAction] A function that will called after any
+ *
+ * @param {function} [props.postAction] A function that will called after any
  *    Hyperapp action is invoked. The function should take the following
  *    arguments:
  *    name  - the name of the action function
  *    state - the state that was provided to the action function
  *    props - the second argument that the action function was called with
  *    rv    - the value returned by the action function
+ *
  * @param {function} [props.preEffect] A function that will called before any
  *    Hyperapp effect is invoked. The function should take the following
  *    arguments:
  *    name  - the name of the effect function
  *    props - the second argument that the effect function will be called with
+ *
  * @param {function} [props.postEffect] A function that will called after any
  *    Hyperapp effect is invoked. The function should take the following
  *    arguments:
@@ -30,7 +37,7 @@
  *    props - the second argument that the effect function was called with
  */
 export function generateMiddleware({
-  onStateChange,
+  buildStateChangeEffect,
   preAction,
   postAction,
   preEffect,
@@ -88,20 +95,20 @@ export function generateMiddleware({
             tuple[0] = wrapEffect(tuple[0], preEffect, postEffect);
           }
 
-          // Insert an effect that will call the onStateChange action
-          // immediately after the state is updated.
-          if (onStateChange) {
-            action.splice(1, 0, [dispatchActionEffect, onStateChange]);
+          // Build and insert the buildStateChangeEffect effect so that it will
+          // be invoked immediately after the state is updated.
+          if (buildStateChangeEffect) {
+            action.splice(1, 0, buildStateChangeEffect(action[0]));
           }
         }
       } else {
         // Signature 1: A new state has been provided.
         // The new state is the action argument. The props argument is not used.
 
-        // Schedule the onStateChange action to be dispatched as soon as the
-        // state is updated.
-        if (onStateChange) {
-          props = [dispatchActionEffect, onStateChange];
+        // Schedule the buildStateChangeEffect effect to be invoked as soon as
+        // the state is updated.
+        if (buildStateChangeEffect) {
+          action = [action, buildStateChangeEffect(action)];
         }
       }
 
@@ -165,16 +172,6 @@ function wrapEffect(effectFn, pre, post) {
   } else {
     return effectFn;
   }
-}
-
-/**
- * A Hyperapp effect that just dispatches an action.
- *
- * @param {*} dispatch
- * @param {function|[function, *]} action The action (or action tuple) to dispatch.
- */
-function dispatchActionEffect(dispatch, action) {
-  dispatch(action);
 }
 
 /**
