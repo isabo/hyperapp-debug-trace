@@ -4,11 +4,6 @@
  *
  * @param {Object} props
  *
- * @param {function} [props.buildStateChangeEffect] A function that builds a
- *    Hyperapp effect tuple that will be invoked whenever the state changes.
- *    The effect builder may accept the following arguments:
- *    state - the new state of the application
- *
  * @param {function} [props.preAction] A function that will called before any
  *    Hyperapp action is invoked. The function should take the following
  *    arguments:
@@ -35,13 +30,18 @@
  *    arguments:
  *    name  - the name of the effect function
  *    props - the second argument that the effect function was called with
+ *
+ * @param {function} [props.buildStateChangeEffect] A function that builds a
+ *    Hyperapp effect tuple that will be invoked whenever the state changes.
+ *    The effect builder may accept the following arguments:
+ *    state - the new state of the application
  */
 export function generateMiddleware({
-  buildStateChangeEffect,
   preAction,
   postAction,
   preEffect,
   postEffect,
+  buildStateChangeEffect,
 }) {
   /**
    * Returns a wrapped version the Hyperapp dispatch function. This middleware

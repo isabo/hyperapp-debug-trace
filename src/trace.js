@@ -1,37 +1,12 @@
 import { generateMiddleware, getFunctionName } from './intercept';
 
 export const traceDispatch = generateMiddleware({
-  onStateChange: generateStateChangeAction(),
   preAction,
   postAction,
   preEffect,
   postEffect,
+  buildStateChangeEffect: generateStateChangeEffectBuilder(),
 });
-
-/**
- * Returns an OnStateChange action that logs state changes.
- *
- * @returns {function(*)}
- */
-function generateStateChangeAction() {
-  let prevState;
-
-  /**
-   * Log state changes.
-   *
-   * @param {*} state
-   */
-  return function OnStateChange(state) {
-    console.log('State changed from ', prevState, ' to', state);
-    prevState = state;
-
-    // Prevent this action from getting wrapped, as it the log will be
-    // confusing.
-    OnStateChange['$isWrapped'] = true;
-
-    return state;
-  };
-}
 
 /**
  * Logs the arguments provided to the action that is about to be dispatched.
@@ -103,6 +78,51 @@ export function preEffect(name, props) {
  */
 export function postEffect(name, props) {
   console.groupEnd();
+}
+
+/**
+ * Returns a function that when called, returns a Hyperapp effect tuple that
+ * will log a state change.
+ *
+ * @returns {function(*)}
+ */
+function generateStateChangeEffectBuilder() {
+  let prevState;
+
+  /**
+   * Returns a Hyperapp effect tuple that will log a state change.
+   *
+   * @param {*} state
+   * @returns {[function(*), *]}
+   */
+  return function buildStateChangeEffect(state) {
+    return [logStateChangeFx, { from: prevState, to: state }];
+  };
+}
+
+/**
+ * Logs state changes.
+ *
+ * @param {Object} states The previous and new state values.
+ * @param {*} states.from
+ * @param {*} states.to
+ */
+function logStateChangeFx({ from, to }) {
+  onStateChange(from, to);
+}
+
+// Prevent the above effect function from getting wrapped, as it the log will be
+// confusing.
+logStateChangeFx['$isWrapped'] = true;
+
+/**
+ * Logs state changes.
+ *
+ * @param {*} fromState
+ * @param {*} toState
+ */
+function onStateChange(fromState, toState) {
+  console.log('State changed from ', fromState, 'to', toState);
 }
 
 /**
