@@ -1,6 +1,6 @@
 {
   "name": "hyperapp-debug-trace",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Debug Hyperapp apps by tracing execution of actions and effects.",
   "main": "./dist/hyperapp-debug-trace.min.js",
   "module": "./dist/hyperapp-debug-trace.min.js",
