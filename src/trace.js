@@ -96,18 +96,24 @@ function generateStateChangeEffectBuilder() {
    * @returns {[function(*), *]}
    */
   return function buildStateChangeEffect(state) {
-    return [logStateChangeFx, { from: prevState, to: state }];
+    const rv = [logStateChangeFx, { from: prevState, to: state }];
+
+    // Save the state to compare next time.
+    prevState = state;
+
+    return rv;
   };
 }
 
 /**
  * Logs state changes.
  *
+ * @param {funtion} dispatch Hyperapp's dispatch function (not used).
  * @param {Object} states The previous and new state values.
  * @param {*} states.from
  * @param {*} states.to
  */
-function logStateChangeFx({ from, to }) {
+function logStateChangeFx(dispatch, { from, to }) {
   onStateChange(from, to);
 }
 
